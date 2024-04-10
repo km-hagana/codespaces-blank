@@ -1,23 +1,319 @@
 body {
-    padding:0px;
-    margin:0px;
-    text-align:center;
-    letter-spacing: 0.03em;
-    font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-   }
-   
-   .column {
-    width:70%;
-    color:#1a1a1a;
-    border: 1px solid #666;
-    display: inline-block;
-    padding:5px;
-    margin:5px;
-    text-align:center;
-   }
-   
-   a:hover,a:active {
-    color:orange;
-    border-bottom-width:1px;
-   }
-   
+ padding:0px;
+ margin:0px;
+ text-align:center;
+ letter-spacing: 0.03em;
+ font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+}
+
+.column {
+ width:70%;
+ color:#1a1a1a;
+ border: 1px solid #666;
+ display: inline-block;
+ padding:5px;
+ margin:5px;
+ text-align:center;
+}
+
+a:hover,a:active {
+ color:orange;
+ border-bottom-width:1px;
+}
+
+hr {
+ border:1px solid #aaa;
+}
+
+p {
+ padding:5px;
+}
+p.cap {
+ padding: 14px;
+ margin: auto 14px;
+ display: block;
+ font-size: 95%;
+}
+p.cap span {
+ font-weight:bold;
+}
+span.line {
+ border-bottom: solid 1px orange;
+}
+
+/*前にチェックアイコン*/
+span.line::before {
+ font-family: "Material Icons";
+ content: "\e5ca";
+ font-size: 16px;
+ color: orangered;
+ vertical-align: text-bottom;
+}
+
+
+/*** メインのエリア ***/
+
+.select,.inputArea {
+ margin:0;
+ padding:0;
+}
+.select label {
+ font-size: 110%;
+ padding: 10px 0 20px 10px; /*字のクリック範囲拡大させる*/
+}
+label:active,label:hover {
+ cursor: pointer;
+}
+input[type="radio"] {
+ transform:scale(1.3)
+}
+input[type="checkbox"] {
+ transform:scale(1.3)
+}
+
+.s_ms,.s_p {
+ background-color: #f5f5f5;
+ display: inline-block;
+ margin: 0 0 2px; /*上 左右 下*/
+ padding: 10px 5%;
+ border-radius: 10px;
+ }
+
+
+
+.type {
+ width:49%;
+ display: inline-block; /*横並び*/
+ padding: 5px 0px;
+}
+.preview {
+ width:49%;
+ vertical-align: top; /*トップでそろえる*/
+ display: inline-block; /*横並び*/
+ padding: 5px 0px;
+}
+.label {
+ font-size:120%;
+ padding: 5px;
+ border-bottom: 1px solid #aaa;
+}
+
+
+
+/*** 入力エリア ***/
+
+/*** 一括 ***/
+input,button {
+ border-radius: 5px;
+ margin:2px 1px;
+}
+
+input {
+ border:2px solid orange;
+ background-color: #ffdead;
+ padding: 3px;
+}
+button {
+ font-size:100%;
+ border:2px solid #ee7800;
+ background-color: orange;
+ padding: 3px 8px;
+ margin:5px -0.5px 0;
+}
+button:active,button:hover {
+ color:#666;
+ border:2px solid darkorange;
+ background-color: darkorange;
+}
+
+button#go {
+ font-size: 100%;
+}
+
+button#clear {
+ border:2px solid #666;
+ background-color: #fff;
+}
+
+button#undo,#redo,#undo_s,#redo_s {
+  border: 2px solid #008080;
+  background-color: #66cdaa;
+}
+button#undo:active,button#redo:active,button#undo:hover,button#redo:hover,#undo_s:active,#redo_s:active,#undo_s:hover,#redo_s:hover {
+ border:2px solid #24b383;
+ background-color: #24b383;
+}
+
+/*textareaが何故かcssで効かないため、htmlに直書き*/
+
+/*** 個別 ***/
+.single {
+ display: none; /*デフォルトで非表示*/
+}
+#template input {
+ width: 30%;
+}
+
+/*ドラッグボタン*/
+#template .drag {
+ position: relative;
+ margin: 1px 2px 1px 1px;/*上左下右*/
+ width: 24px;
+ height: 24px;
+ display: inline-block;
+ background-color: silver;
+ border-radius: 5px;
+ vertical-align: middle;
+ cursor: move;
+}
+
+/*ドラッグボタンの線を疑似的に作成*/
+.drag::before,.drag::after {
+ position: absolute;
+ content:""; /*これがないと表示されない*/
+ width: 15px;
+ height: 2px;
+ background-color: #fff;
+ left: 5px;
+}
+.drag::before{
+ top: 8px;
+}
+.drag::after {
+ bottom: 8px;
+}
+
+/*削除ボタン*/
+.delete {
+ /*疑似アイコン背景*/
+ position: relative;
+ margin: 1px 2px 1px 1px;/*上左下右*/
+ height: 24px;
+ width: 24px;
+ display: inline-block;
+ background-color: #ff0000;
+ border-radius: 20px;
+ vertical-align: middle;
+}
+.delete::before {
+ /*疑似アイコン*/
+ position: absolute;
+ content:"×";
+ color: #fff;
+ font-size:24px;
+ margin-top:-1px;
+ margin-left:-6.7px;
+}
+
+/*メニュー群*/
+/*削除メニュー - JSでは疑似クラスの操作はできないから作って指定*/
+.defaultBtn {
+ color:#000;
+ border:2px solid #ff3333;
+ background-color: #fff;
+}
+.defaultBtn:hover {
+ color:#666;
+ border:2px solid #ff8888;
+ background-color: #ff8888;
+}
+.pushBtn {
+ color:#fff;
+ border:2px solid #ff0000;
+ background-color: #ff3333;
+}
+
+/*追加ボタン*/
+button#addMenu {
+ position: relative;
+ border:2px solid #666;
+ background-color:#fff;
+ padding-left:28px;
+}
+button#addMenu::before {
+ /*疑似アイコン背景*/
+ position: absolute;
+ width: 20px;
+ height: 20px;
+ background-color: #3cb371;
+ border-radius: 20px;
+ margin-top:2px;
+ margin-left:-24px;
+  /*プラスマーク*/
+  content:"+";
+  color: #fff;
+  font-size: 123%;
+  font-weight:bold;
+}
+
+.footer {
+ margin:20px 20px 0px;
+}
+
+
+
+
+
+/*** 任意px以下の画面で表示切替 ***/
+/*変更したい箇所のみ書けばおｋ*/
+
+@media screen and (max-width:665px) {
+ .column {
+  border:none;
+  width:100%;   /*全体の幅*/
+  padding:0px;
+  margin:0px;
+ }
+ p {margin:8px 18px;}
+ p.cap {padding:8px;}
+
+ .s_ms,.s_p {
+ display: block;
+ margin: 0 20px 2px; /*上 左右 下*/
+ padding: 10px;
+ }
+ 
+ .type {
+  width:100%;
+ }
+ .preview {
+  width:90%;
+ }
+ .label {
+  width:100%;
+ }
+
+ .footer {
+  margin:5px;
+ }
+}
+
+
+
+
+
+/*Google material icons設定*/
+.material-icons-sharp {
+     font-family: 'Material Icons';
+     font-weight: normal;
+     font-style: normal;
+     font-size: 24px;  /* Preferred icon size */
+     display: inline-block;
+     line-height: 1;
+     text-transform: none;
+     letter-spacing: normal;
+     word-wrap: normal;
+     white-space: nowrap;
+     direction: ltr;
+
+     /* Support for all WebKit browsers. */
+     -webkit-font-smoothing: antialiased;
+     /* Support for Safari and Chrome. */
+     text-rendering: optimizeLegibility;
+
+     /* Support for Firefox. */
+     -moz-osx-font-smoothing: grayscale;
+
+     /* Support for IE. */
+     font-feature-settings: 'liga';
+}
