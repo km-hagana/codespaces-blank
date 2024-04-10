@@ -1,17 +1,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<link href="style.css" rel="stylesheet" type="text/css" media="all">
 <!--デバイスの幅に合わせる-->
  <meta name="viewport" content="width=device-width,initial-scale=1">
-
 <!--Google Material Icons | sharp style-->
 <!--HELP | https://google.github.io/material-design-icons-->
  <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Sharp" rel="stylesheet">
  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
-<body><script src="index.js"></script>
-<div class="column">
+<body><div class="column">
 
 <p><span style="font-size:130%;font-weight:bold; ">|&xxx(123)| の形式にするツール</span><br><span style="font-size:80%;">for atwiki / <a href="https://w.atwiki.jp/hmiku/" target="_blank">初音ミクwiki</a></span></p>
  <div>
@@ -20,3 +17,77 @@
     ニコ動 または YouTube のURLが対象</span><br>
    <span class="line">
     固有番号だけでもOK</span><br>（固有番号とは：<span style="color:orangered;">sm12345</span> や watch?v=<span style="color:orangered;">aiueo</span> の赤字の部分）<br>
+   <span class="line" style"padding-top:5px;">
+    たまにURLのあとに付いている無駄に長いパラメータも自動削除します</span><br></p>
+ </div>
+<!--
+ <input id="sampleY" value="https://m.youtube.com/watch?v=Dx9m4jpocAc">
+ <button id="petaY">YouTube</button>-->
+
+
+
+<p class="main">
+ <div class="select">
+  <div class="s_ms">
+   <input type="radio" name="select" id="sm" onclick="radio();" checked/><label for="sm">一括変換</label>&ensp;
+   <input type="radio" name="select" id="ss" onclick="radio();"/><label for="ss">個別</label>
+  </div>
+
+  <div class="s_p">
+   <input type='checkbox' id="sp" onclick="check();" checked/><label for="sp">プレビューを表示</label>
+  </div>
+ </div>
+
+ <div class="type" id="type">
+  <div class="many" id="many">
+   <textarea id="URL" cols="30" rows="10" placeholder="ここに入力" spellcheck="false" style="width:90%;
+ border:2px solid orange;
+ background-color:#ffdead;
+ border-radius:3px;
+ "></textarea><br>
+   <button id="clear" type="button">消去</button>
+   <button id="undo" onclick="undo();">戻す</button>
+   <button id="redo" onclick="redo();">やり直す</button>
+   <button id="go" type="button">変換</button>
+  </div>
+
+  <div class="single" id="single">
+   <div id="template">
+   <input><div class="drag"></div><input><div class="drag"></div><input><div class="drag"></div><input><div class="drag"></div><input><div class="drag"></div><input><div class="drag"></div>
+   </div>
+   <div class="menu">
+    <button id="deleteMenu" onclick="deleteShow();" class="defaultBtn" type="button">削除メニュー</button>
+    <button id="undo_s" onclick="undoSingle();">戻す</button>
+    <button id="redo_s" onclick="redoSingle();">やり直す</button>
+    <button id="addMenu" onclick="addForm();" type="button">追加</button>
+   </div>
+  </div>
+ </div>
+ 
+ <div class="preview" id="preview">
+  <div class="label">プレビュー</div>
+  <div>ここにプレビュー</div>
+ </div>
+</p>
+
+
+変換結果を一括個別ともに下に表示、プレビューはcodepenみたいに上下スプリット表示(非表示可)したい
+textareなどから固有番号を読み取る→配列に格納→動画情報リクエスト→表示
+戻す/やり直す/変換　配列格納
+ソート機能はやらない(削除済み動画もあるから)
+プレビューをビジュアル編集にしてもいいかも
+個別枠を増やしたら配列も増やす https://www.javadrive.jp/javascript/array/index6.html#section3
+分かりやすい配列解説https://www.freecodecamp.org/japanese/news/javascript-array-of-objects-tutorial-how-to-create-update-and-loop-through-objects-using-js-array-methods/
+ 
+ <div class="footer">
+ プレーヤー埋め込みコード
+ <script type="application/javascript" src="https://embed.nicovideo.jp/watch/sm43627338/script?w=320&h=180"></script><noscript><a href="https://www.nicovideo.jp/watch/sm43627338">好きなアレンジ発表ドラゴン / 初音ミク</a></noscript>
+ 動画情報とサムネイル埋め込みコード
+　<iframe width="312" height="176" src="https://ext.nicovideo.jp/thumb/sm42515407" scrolling="no" style="border:solid 1px #ccc;" frameborder="0"><a href="https://www.nicovideo.jp/watch/sm42515407">好きな惣菜発表ドラゴン / 重音テト</a></iframe>
+ <iframe width="342" height="187" src="https://www.youtube.com/embed/OnCFEo_pXaY?si=0UksXAKRc3FqxTrv&amp;controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+ <!--画像-->
+ <img src="http://img.youtube.com/vi/OnCFEo_pXaY/default.jpg">
+ <img src="http://img.youtube.com/vi/OnCFEo_pXaY/mqdefault.jpg">
+</div>
+</body>
+</html>
