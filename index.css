@@ -1,0 +1,23 @@
+body {
+    padding:0px;
+    margin:0px;
+    text-align:center;
+    letter-spacing: 0.03em;
+    font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+   }
+   
+   .column {
+    width:70%;
+    color:#1a1a1a;
+    border: 1px solid #666;
+    display: inline-block;
+    padding:5px;
+    margin:5px;
+    text-align:center;
+   }
+   
+   a:hover,a:active {
+    color:orange;
+    border-bottom-width:1px;
+   }
+   
