@@ -21,7 +21,7 @@
      // &nicovideo形式と固有番号をくっつけて出力するよ
       return "|&nicovideo\(" + arguments[1] + "\)|";
    } else {
-      return arguments[0] //繰り返し
+      return arguments[0]; //繰り返し
    }
                   }
              )
@@ -39,13 +39,13 @@
     else if(arguments[0] && !arguments[3]) {
       return "|&youtube\(" + "https://www.youtube.com/watch\?v=" + arguments[2] + "\)" + "{342,187}" + "|";
    } else {
-      return arguments[0] // 繰り返し
+      return arguments[0]; // 繰り返し
    }
                    }
                       ).replace(/\|:\/\/\|/g, "||"); // 英字とhttpがくっついて :// になるので|://|を||に変換。削除にすると&Youtubeの中身のやつまで消えるからダメ
 	textarea.value = text; // 変更を加えたテキストをtextareaに反映
 	}, false);
-}());
+}())
 
 
 
@@ -105,8 +105,8 @@ function radio() {
   // 個別なら一括変換を非表示・個別を表示
   many.style.display = "none";
   single.style.display = "inline-block";
- };
-};
+ }
+}
 
 ///// 個別メニュー
  /// 移動の配列
@@ -132,7 +132,7 @@ function radio() {
       // delete -> drag
       deleteIconArray.forEach((element) => {element.setAttribute("class","drag")});
       deleteMenu.classList.toggle("pushBtn");
-    };
+    }
 }
 //追加ボタン押したらdragに戻すようにしたい
 //配列の最後を読み取って判断？
@@ -160,7 +160,7 @@ function radio() {
 } else if(divCls === "delete"){
  newdiv.setAttribute("class","delete");
      newdiv2.setAttribute("class","delete");
-};
+}
 
        //作ったやつを挿入
        template.appendChild(newinput) + template.appendChild(newdiv);
@@ -192,7 +192,7 @@ function check() {
   previewStyle.style.display = "none";
   // 編集枠の幅100%
   type.style.width = "100%";
- };
-};
+ }
+}
 
 // サムネ表示
