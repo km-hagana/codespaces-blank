@@ -5,7 +5,7 @@
  ///// textareaのIDを指定
 	const textarea = document.getElementById('URL');
 
-(function () {
+;(function () {
  // 実行ボタンを押すと処理
  var btnGo = document.getElementById('go');
  btnGo.addEventListener('click', function(){
@@ -45,7 +45,7 @@
                       ).replace(/\|:\/\/\|/g, "||"); // 英字とhttpがくっついて :// になるので|://|を||に変換。削除にすると&Youtubeの中身のやつまで消えるからダメ
 	textarea.value = text; // 変更を加えたテキストをtextareaに反映
 	}, false);
-}())
+})();
 
 
 
