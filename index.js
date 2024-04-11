@@ -8,7 +8,7 @@
 ;(function () {
  // 実行ボタンを押すと処理
  var btnGo = document.getElementById('go');
- btnGo.addEventListener('click', function(){
+ btnGo.addEventListener('click', function() {
    // テキストの内容を取得
   	var text = textarea.value;
    textarea.focus();
