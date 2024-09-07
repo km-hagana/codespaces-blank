@@ -2,46 +2,107 @@
  // getelem~idメソッドの名前を短絡化
  var byId = function(id){ return document.getElementById(id); };
 
- ///// textareaのIDを指定
+ // textareaのIDを指定
 	const textarea = document.getElementById('URL');
 
+ // 動画 配列
+ var inBoxStr = [];
+
+///// 変換
 function btnGo() {
   // テキストの内容を取得
   var text = textarea.value;
   textarea.focus();
+
+ // replace(/使う(?:削除)/g , アクション)  gはグローバル(全文)検索
+
   // PC版クエリ始まりeyJ0e ~ 終わり9fQ fX0 n19 まだある？集める　ケタが決まってないから法則性でマッチさせる
-  // 正規表現   0:nico, 1:sm, 2:|&nico|, 3:sm
-  text = text.replace(/(?:(?:https?:\/\/)?(?:nico\.ms|(?:(?:www|sp)?\.)?nico(?:video|chart)\.jp)?\/)?(?:watch\/)?((?:sm|nm|so)[0-9]+|[0-9]{10,})(?:[\?\&][a-z_]+=(?:(?:[a-zA-Z0-9_\-]+|eyJ0e[a-zA-Z]+(?:9fQ|fX0|n19))(?:https?)?))*|((?:\|)?\&nicovideo\((?:[a-z]{2})?[0-9]+\)(?:\|)?)/g , 
-    function(){     // 特定の文字に置換するのではなくfunctionで条件付け
-      // ニコニコにマッチするが、3つ目のカッコである|&nicovideo|形式は変換しない
+  // 正規表現   0:nico, 1:sm |  2:|&nico|, 3:(sm)
+  text = text.replace(/(?:(?:https?:\/\/)?(?:nico\.ms|(?:(?:www|sp)?\.)?nico(?:video|chart)\.jp)?\/)?(?:watch\/)?((?:sm|nm|so)[0-9]+|[0-9]{10,})(?:[\?\&][a-z_]+=(?:(?:[a-zA-Z0-9_\-]+|eyJ0e[a-zA-Z]+(?:9fQ|fX0|n19))(?:https?)?))*|((?:\|)?\&nicovideo\((?:[a-z]{2})?[0-9]+\)(?:\|)?)/g, 
+    function(){
+      // ニコニコにマッチするが、2つ目のカッコである|&nicovideo|形式は変換しない
       if(!arguments[2]) {
         // &nicovideo形式と固有番号をくっつけて出力するよ
-        return "|&nicovideo\(" + arguments[1] + "\)|";
+        return "\|\&nicovideo\(" + arguments[1] + "\)\|";
       } else {
         return arguments[0]; //繰り返し
       }
     }
-  )
+  );
 
-  // 正規表現   0:youtube, 1:watch, 2:xxx, 3:|&youtube|
-  .replace(/(?:(?:https?:\/\/)?(?:(?:www|m)?\.)?youtu[\.]?be(?:\.com)?\/)?(watch\?v=)?([a-zA-Z0-9_\-]{11})(?:\&[a-z]+=[a-zA-Z0-9]+)?|((?:\|)?\&youtube\((https:\/\/www\.youtube\.com\/watch\?v=[a-zA-Z0-9_\-]{11}(\{[0-9]{2,4}\,[0-9]{2,4}\})?)\)(?:\|)?)/g, 
+  // 正規表現   0:youtube, 1:watch, 2:xxx | 3:|&youtube(){}|, 4:(https://~xxx){123,456}, 5:{123,456}
+  text = text.replace(/(?:(?:https?:\/\/)?(?:(?:www|m)?\.)?youtu[\.]?be(?:\.com)?\/)?(watch\?v=)?([a-zA-Z0-9_\-]{11})(?:\&[a-z]+=[a-zA-Z0-9]+)?|((?:\|)?\&youtube(\(https:\/\/www\.youtube\.com\/watch\?v=[a-zA-Z0-9_\-]{11}(\{[0-9]{2,4}\,[0-9]{2,4}\})?)\)(?:\|)?)/g, 
     function(){
-      // ようつべにマッチするが、8つ目のカッコである|&youtube|は変換しない
+      // ようつべにマッチするが、3つ目のカッコである|&youtube|は変換しない
       // {123,456}があったら
       if(arguments[0] && !arguments[3] && arguments[4]) {
         // &youtube形式とアドレスと固有番号をくっつけて出力するよ
-        return "|&youtube\(" + "https://www.youtube.com/" + "watch\?v=" + arguments[2] + "\)" + arguments[4] + "|";
+        return "|&youtube(" + "https://www.youtube.com/watch\?v=" + arguments[2] + ")" + arguments[4] + "|";
       // {123,456}がなかったら
-      } else if(arguments[0] && !arguments[3]) {     
-        return "|&youtube\(" + "https://www.youtube.com/watch\?v=" + arguments[2] + "\)" + "{342,187}" + "|";
+      } else if(arguments[0] && !arguments[4]) {
+        return "|&youtube(" + "https://www.youtube.com/watch\?v=" + arguments[2] + ")" + "{342,187}" + "|";
       } else {
-      return arguments[0]; // 繰り返し
+        return arguments[0]; // 繰り返し
       }
-    })
-  .replace(/\|:\/\/\|/g, "||"); // 英字とhttpがくっついて :// になるので|://|を||に変換。削除にすると&Youtubeの中身のやつまで消えるからダメ
+    });
+
+  // 空白を削除
+  //text = text.replace(/\s|\n/g , "");
+
+  // |&ny()| 1:n/y 2:( sm??? or http~{ ) 3:)or}
+  const nyBox = "\\|\\&(nicovideo|youtube)(\\([a-zA-Z0-9\\_\\:\\/\\?\\,\\.\\=\\)\\{\\-]+)(\\)|\\})" ; 
+  // 改行
+  text = text.replace( new RegExp(nyBox,"g") ,
+    function(){
+      if( arguments[3] === "}" )
+       { return "\|\&" + arguments[1] + arguments[2] + arguments[3] + "\n" ; }
+      else if( arguments[3] === ")" )
+       { return "\|\&" + arguments[1] + arguments[2] + arguments[3] + "\n" ; }
+      else { return arguments[0]; }
+    }
+  );
+  // 先頭の不要な文字列を削除
+  //text = text.replace(/^.*?\|/gm, "\|");
+
+  // 配列に格納
+    inBoxStr = text.match(/\|\&.+(\)|\})/g);
+
+  // 2つずつ
+    for( let i = 0; i < inBoxStr.length; i++ ){
+      //2の加算を繰り返して偶数位置に|\nを入れる   ※注意※ iにすると無限ループ地獄
+      inBoxStr.splice(i+=2,0,'\|\n');   // ( 位置 , 0:挿入/1:削除 , 挿入する文字)
+     console.log(inBoxStr);
+      text = inBoxStr.join("");
+    }
+ 
+  // 奇数個だったら最後に|を付ける
+    if(inBoxStr.length % 2 == 1){
+      text = text.replace(/\n$/g, "\|\n");
+    }else{
+      textarea.value = text;
+      return;
+    }
+
+
+
+ //[番号i][box中身j] boxの中身を二次元配列で格納
+ //let boxInfo = [[,],[,]]; 
+ // for( let i = 0; 0 < 2/*splitText.length*/; i-- ){
+ // 番号を[i]に振っていく
+ 
+ // 中身を[j]に格納
+ // boxInfo[j] = [];
+ // boxInfo.push(
+ //  text.replace(new RegExp(// , "m") ,
+ //  )
+ // );
+
+// }
+
   textarea.value = text; // 変更を加えたテキストをtextareaに反映
   return;
 }
+
 
 
 
@@ -103,63 +164,94 @@ function radio() {
  }
 }
 
-///// 個別メニュー
- /// 移動の配列
- 
+
+
+///// 個別
+// template取得
+const template = byId('template');
+// アイコンを取得（配列風メソッド）
+const dragIcon = template.getElementsByClassName('drag');
+const deleteIcon = template.getElementsByClassName('delete');
+// inputとdivを取得
+const input = template.getElementsByTagName('input');
+const div = template.getElementsByTagName('div');
+//  const inputArray = Array.from(input);
+//  const divArray = Array.from(div);
+
+/// 配列
+const inputAndDiv = [];
+ // inputとdivをセットで格納
+ (function(){
+  for (let i=0; i<input.length; i++){
+    inputAndDiv[i] = [[i],[input[i]+div[i]]];
+  }
+  return inputAndDiv;
+ }())
+//D&D時spliceで挿入　配列取得いつ？即時関数？
+
+ /// 削除アイコンを押したら削除
+ for (let i=0; i < div.length; i++){
+   div[i].addEventListener("click", function(){
+     if(this.className === "delete"){
+       // HTMLから削除
+       this.previousElementSibling.remove(); //前にあるinput
+       this.remove(); //押したdiv
+       // 配列から削除
+       const aaa = inputAndDiv.splice(inputAndDiv[i],1);
+       console.log(inputAndDiv);
+     }
+    return inputAndDiv;
+   });
+ }
+
+ // 消したデータ格納
+ const deleteData = [];
+
+
 
  /// 削除メニュー
+ // 削除メニュー取得
+ const deleteMenu = byId('deleteMenu');
  function deleteShow(){
-  // 削除メニュー取得
-  const deleteMenu = byId('deleteMenu');
-  // アイコンの個数を取得（配列型メソッド）
-  const dragIcon = document.getElementsByClassName('drag');
-  const deleteIcon = document.getElementsByClassName('delete');
-  // getElementsByClassName は HTMLCollection という配列風オブジェクトを返すため配列ではない。配列に変換
+  // getElementsByClassName は HTMLCollection という配列風オブジェクトのため配列ではない。配列に変換
   const dragIconArray = Array.from(dragIcon);
   const deleteIconArray = Array.from(deleteIcon);
 
-    if(dragIcon[0]) {
-      // drag -> delete
-      dragIconArray.forEach((element) => {element.setAttribute("class","delete")});
-      // 削除メニューを押したままにする
-      deleteMenu.classList.toggle("pushBtn");
-    } else if(deleteIcon[0]) {
-      // delete -> drag
-      deleteIconArray.forEach((element) => {element.setAttribute("class","drag")});
-      deleteMenu.classList.toggle("pushBtn");
-    }
-}
-//追加ボタン押したらdragに戻すようにしたい
-//配列の最後を読み取って判断？
-
-
+  if(dragIcon[0]){
+    // drag -> delete
+    dragIconArray.forEach((i) => {i.setAttribute("class","delete")});
+    // 削除メニューを押した状態にする
+    deleteMenu.classList.toggle("pushBtn");
+  }else if(deleteIcon[0]){
+    // delete -> drag
+    deleteIconArray.forEach((i) => {i.setAttribute("class","drag")});
+    deleteMenu.classList.toggle("pushBtn");
+  }else{
+    // 何も存在しなければ切り替え可能にする
+    deleteMenu.classList.toggle("pushBtn");
+  }
+ }
 
  /// 追加ボタン押したら追加
  function addForm(){
-  // template取得
-  const template = byId('template');
-  // 一番最後のアイコンがどっちなのか取得
-  const divCls = template.lastElementChild.className;
+  // inputとdivを作る
+  const newinput = document.createElement("input");
+  const newdiv = document.createElement("div");
 
-     //input作る
-     const newinput = document.createElement("input");
-     const newinput2 = document.createElement("input");
-     //div作る
-     const newdiv = document.createElement("div");
-     const newdiv2 = document.createElement("div");
-
-     //divにアイコン設定
-     if(divCls === "drag"){
- newdiv.setAttribute("class","drag");
-     newdiv2.setAttribute("class","drag");
-} else if(divCls === "delete"){
- newdiv.setAttribute("class","delete");
-     newdiv2.setAttribute("class","delete");
-}
-
-       //作ったやつを挿入
-       template.appendChild(newinput) + template.appendChild(newdiv);
-       template.appendChild(newinput2) + template.appendChild(newdiv2);
+  /// divにアイコン設定
+  // 削除メニュー押してたらdelete
+  if(deleteMenu.className == "defaultBtn pushBtn"){
+    newdiv.setAttribute("class","delete");
+  }else if(deleteMenu.className == "defaultBtn"){
+   newdiv.setAttribute("class","drag");
+  }
+  
+  // 作ったアイテムを挿入
+  const set1 = template.appendChild(newinput)+template.appendChild(newdiv);
+  // 配列に反映
+  inputAndDiv.push(inputAndDiv.slice(-1),[set1]); //最後の数字を+1したい
+    console.log(inputAndDiv);
+    return inputAndDiv;
  }
 
 
@@ -182,12 +274,11 @@ function check() {
   // クラスtypeの幅を戻す
   type.style.width = typeWidth;
  } else {
-
   // チェックOFFならプレビューを非表示
   previewStyle.style.display = "none";
   // 編集枠の幅100%
   type.style.width = "100%";
- }
-}
+ };
+};
 
-// サムネ表示
+/// サムネ表示
