@@ -3,6 +3,7 @@ body {
  margin:0px;
  text-align:center;
  letter-spacing: 0.03em;
+ word-break: break-all;
  font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
 }
 
@@ -25,17 +26,26 @@ hr {
  border:1px solid #aaa;
 }
 
+div.long{
+ font-size:96%;
+ margin:auto 20px;
+}
+
 p {
- padding:5px;
+ padding:8px;
 }
 p.cap {
- padding: 14px;
- margin: auto 14px;
+ padding-left: 20px;
+ margin: 5px 50px;
+ background-color: #f5f5f5;
  display: block;
  font-size: 95%;
+ text-align:left;
 }
 p.cap span {
+ margin: auto 20px;
  font-weight:bold;
+ display: inline-block;
 }
 span.line,span.line2 {
  border-bottom: solid 1px orange;
@@ -45,7 +55,7 @@ span.line,span.line2 {
 span.line::before {
  font-family: "Material Icons";
  content: "\e5ca";
- font-size: 16px;
+ font-size: 20px;
  color: orangered;
  vertical-align: text-bottom;
 }
@@ -71,10 +81,7 @@ span.line2::before {
 label:active,label:hover {
  cursor: pointer;
 }
-input[type="radio"] {
- transform:scale(1.3)
-}
-input[type="checkbox"] {
+input[type="radio"],input[type="checkbox"] {
  transform:scale(1.3)
 }
 
@@ -110,14 +117,21 @@ input[type="checkbox"] {
 /*** 入力エリア ***/
 
 /*** 一括 ***/
+textarea {
+ width: 90%;
+ border: 2px solid #FFB87F;
+ background-color: #FFF0E5;
+ border-radius: 3px;
+}
+
 input,button {
  border-radius: 5px;
- margin:2px 1px;
+ margin: 2px 1px;
 }
 
 input {
- border:2px solid orange;
- background-color: #ffdead;
+ border: 2px solid #FFB87F;
+ background-color: #FFF0E5;
  padding: 3px;
 }
 button {
@@ -147,11 +161,9 @@ button#undo,#redo,#undo_s,#redo_s {
   background-color: #66cdaa;
 }
 button#undo:active,button#redo:active,button#undo:hover,button#redo:hover,#undo_s:active,#redo_s:active,#undo_s:hover,#redo_s:hover {
- border:2px solid #24b383;
+ border: 2px solid #24b383;
  background-color: #24b383;
 }
-
-/*textareaが何故かcssで効かないため、htmlに直書き*/
 
 /*** 個別 ***/
 .single {
@@ -235,23 +247,28 @@ button#addMenu {
  position: relative;
  border:2px solid #666;
  background-color:#fff;
- padding-left:28px;
 }
 button#addMenu::before {
- /*疑似アイコン背景*/
+ font-family: "Material Icons";
+ content: "\e147";
+ font-size: 20px;
+ color: green;
+ vertical-align: text-bottom;
+}
+ /*疑似アイコン背景
  position: absolute;
  width: 20px;
  height: 20px;
  background-color: #3cb371;
  border-radius: 20px;
  margin-top:2px;
- margin-left:-24px;
-  /*プラスマーク*/
+ margin-left:-24px;*/
+
+  /*プラスマーク
   content:"+";
   color: #fff;
   font-size: 123%;
-  font-weight:bold;
-}
+  font-weight:bold;*/
 
 .footer {
  margin:20px 20px 0px;
@@ -272,7 +289,7 @@ button#addMenu::before {
   margin:0px;
  }
  p {margin:8px 18px;}
- p.cap {padding:8px;}
+ p.cap {padding:8px;margin:8px;}
 
  .s_ms,.s_p {
  display: block;
@@ -283,6 +300,17 @@ button#addMenu::before {
  .type {
   width:100%;
  }
+ #template {
+  margin-bottom:5px;
+ }
+ #template input {
+  margin:3px 2px 3px 5px;
+ }
+ .delete::before {
+  margin-top:-2.5px;
+  margin-left:-6px;
+ }
+
  .preview {
   width:90%;
  }
