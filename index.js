@@ -1,12 +1,14 @@
-///// どの括弧にも入ってないグローバル変数のため都度定義の必要なし
- // getelem~idメソッドの名前を短絡化
+///// グローバル変数
+ // getElem~idメソッドを短絡化
  var byId = function(id){ return document.getElementById(id); };
 
  // textareaのIDを指定
 	const textarea = document.getElementById('URL');
 
- // 動画 配列
+ // 動画URLの配列 再代入ありのためvar
  var inBoxStr = [];
+ // 変更履歴の配列 再代入ありのためvar
+ var changeText = [];
 
 ///// 変換
 function btnGo() {
@@ -68,19 +70,32 @@ function btnGo() {
     inBoxStr = text.match(/\|\&.+(\)|\})/g);
 
   // 2つずつ
-    for( let i = 0; i < inBoxStr.length; i++ ){
+    for( let i=0; i < inBoxStr.length; i++ ){
       //2の加算を繰り返して偶数位置に|\nを入れる   ※注意※ iにすると無限ループ地獄
       inBoxStr.splice(i+=2,0,'\|\n');   // ( 位置 , 0:挿入/1:削除 , 挿入する文字)
-     console.log(inBoxStr);
       text = inBoxStr.join("");
     }
- 
+
+
+  // 2列目と3列目の+3していった位置をとりだす
+  for( let i=0; i < inBoxStr.length; i+=3){
+    let Bi = i+1; // 2つ目の列
+    let Ci = i+2; // |\nの列
+    inBoxStr.slice(Bi,Bi+1); // 2つを取り出す(開始位置,終了位置-1)
+   console.log(inBoxStr.slice(Bi,Bi+2)); // ここで確認しつつ調整！！！
+  }
+  // 連結
+
+
+
   // 奇数個だったら最後に|を付ける
+  const result  = [];
     if(inBoxStr.length % 2 == 1){
-      text = text.replace(/\n$/g, "\|\n");
+      textarea.value = text.replace(/\n$/g, "\|\n");
+      console.log(inBoxStr.length + "個 奇数");
     }else{
       textarea.value = text;
-      return;
+      console.log(inBoxStr.length + "個 偶数");
     }
 
 
