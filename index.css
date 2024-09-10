@@ -112,6 +112,11 @@ input[type="radio"],input[type="checkbox"] {
  border-bottom: 1px solid #aaa;
 }
 
+div#previewColumn img {
+ width: 49%;
+ padding: 1px;
+}
+
 
 
 /*** 入力エリア ***/
