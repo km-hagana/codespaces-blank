@@ -68,6 +68,7 @@ span.line2::before {
 }
 
 
+
 /*** メインのエリア ***/
 
 .select,.inputArea {
@@ -116,8 +117,6 @@ div#previewColumn img {
  width: 49%;
  padding: 1px;
 }
-
-
 
 /*** 入力エリア ***/
 
