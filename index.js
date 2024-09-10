@@ -3,7 +3,7 @@
  var byId = function(id){ return document.getElementById(id); };
 
  // textareaのIDを指定
-	const textarea = document.getElementById('URL');
+ const textarea = document.getElementById('URL');
 
  // 動画URLの配列 再代入ありのためvar
  var inBoxStr = [];
@@ -60,23 +60,20 @@ function btnGo() {
         inBoxStr.push(ytStr);
       }
 
-   ///サムネ表示
-     /// ニコニコ
-      if( nicoID && !ytID ){
-      let thumbnail = document.createElement("img");
-      thumbnail.src = "https:\/\/nicovideo\.cdn\.nimg\.jp\/thumbnails\/" + nicoID + "\/" + nicoID + "\.12345678"; //←8ケタのランダム数字が付く
-      // プレビュー欄の子要素として最後に追加していく
-      pre.appendChild(thumbnail);
-    /// ようつべ
-    } else if( ytID  && !nicoID) {
-      let thumbnail = document.createElement("img");
-      thumbnail.src = "https:\/\/img\.youtube\.com\/vi\/" + ytID + "\/default\.jpg";
-      pre.appendChild(thumbnail);
-    }
-
-
-
-    }
+      ///サムネ表示
+        /// ニコニコ
+        if( nicoID && !ytID ){
+        let thumbnail = document.createElement("img");
+        thumbnail.src = "https:\/\/nicovideo\.cdn\.nimg\.jp\/thumbnails\/" + nicoID + "\/" + nicoID + "\.12345678"; //←8ケタのランダム数字が付く
+        // プレビュー欄の子要素として最後に追加していく
+        pre.appendChild(thumbnail);
+      /// ようつべ
+      } else if( ytID  && !nicoID) {
+        let thumbnail = document.createElement("img");
+        thumbnail.src = "https:\/\/img\.youtube\.com\/vi\/" + ytID + "\/default\.jpg";
+        pre.appendChild(thumbnail);
+      }
+    } //for終わり
   } catch (err) {return;}
 
   // 2つずつ
@@ -99,7 +96,7 @@ function btnGo() {
   // 配列を空にする
   all.length = 0; inBoxStr.length = 0;
   return;
-}
+} // 変換終わり
 
 
 
