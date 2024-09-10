@@ -170,6 +170,13 @@ button#undo:active,button#redo:active,button#undo:hover,button#redo:hover,#undo_
  background-color: #24b383;
 }
 
+button#copy {
+ border:2px solid #afafaf;
+}
+button#paste {
+ border:2px solid #afafaf;
+}
+
 /*** 個別 ***/
 .single {
  display: none; /*デフォルトで非表示*/
