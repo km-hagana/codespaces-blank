@@ -294,5 +294,3 @@ function check() {
   type.style.width = "100%";
  };
 };
-
-/// サムネ表示
