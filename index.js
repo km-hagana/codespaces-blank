@@ -14,107 +14,90 @@
 function btnGo() {
   // テキストの内容を取得
   var text = textarea.value;
-  textarea.focus();
 
- // replace(/使う(?:削除)/g , アクション)  gはグローバル(全文)検索
+  // matchは第2引数なし  gはグローバル(全文)検索
+  // []内でのエスケープは[]内で意味を持つものに付ける→ [ ] - ^ $
 
   // PC版クエリ始まりeyJ0e ~ 終わり9fQ fX0 n19 まだある？集める　ケタが決まってないから法則性でマッチさせる
-  // 正規表現   0:nico, 1:sm |  2:|&nico|, 3:(sm)
-  text = text.replace(/(?:(?:https?:\/\/)?(?:nico\.ms|(?:(?:www|sp)?\.)?nico(?:video|chart)\.jp)?\/)?(?:watch\/)?((?:sm|nm|so)[0-9]+|[0-9]{10,})(?:[\?\&][a-z_]+=(?:(?:[a-zA-Z0-9_\-]+|eyJ0e[a-zA-Z]+(?:9fQ|fX0|n19))(?:https?)?))*|((?:\|)?\&nicovideo\((?:[a-z]{2})?[0-9]+\)(?:\|)?)/g, 
-    function(){
-      // ニコニコにマッチするが、2つ目のカッコである|&nicovideo|形式は変換しない
-      if(!arguments[2]) {
-        // &nicovideo形式と固有番号をくっつけて出力するよ
-        return "\|\&nicovideo\(" + arguments[1] + "\)\|";
-      } else {
-        return arguments[0]; //繰り返し
-      }
-    }
+  const match = text.match(
+  // ニコニコにマッチ
+    // URL全体
+    new RegExp("((?:https?:\\/\\/)?(?:nico\\.ms|(?:(?:www|sp)?\\.)?nicovideo\\.jp)?\\/)?(?:watch\\/)?(?:(?:sm|nm|so)[0-9]+|[0-9]{10,})|"
+    // 要らないと思うけど誤判定したら↑の|の前に入れる→(?:[?&][a-z_]+=(?:[a-zA-Z0-9_\\-]+|eyJ0e[a-zA-Z]+(?:9fQ|fX0|n19)))
+    // sm???
+    + "(?:sm|nm|so)[0-9]+|"
+    // &nicovideo()
+    + "\\&nicovideo\\((?:sm|nm|so)[0-9]+\\)|"
+  // ようつべにマッチ
+    // URL全体
+    + "(?:https?:\\/\\/)?(?:(?:www|m)?\\.)?youtu\\.?be(?:\\.com)?\\/(?:watch\\?v=)?(?:[a-zA-Z0-9_\\-]{11})(?:\\&[a-z]+=[a-zA-Z0-9]+)?|"
+    // v=11桁
+    + "v=[a-zA-Z0-9_\\-]{11}|"
+    // &youtube()
+    + "\\&youtube\\(https?:\\/\\/www\\.youtube\\.com\\/watch\\?v=[a-zA-Z0-9_\\-]{11}\\)(?:\\{[0-9]{2,4}\\,[0-9]{2,4}\\})?"
+    , "g")
   );
+ 
+  /// サムネ欄 (1回でいいからループ外で設定しとく)
+    //画像を表示するプレビュー欄取得
+    const pre = document.querySelector('#previewColumn');
+    // 説明文を消す
+    pre.innerHTML = "";
 
-  // 正規表現   0:youtube, 1:watch, 2:xxx | 3:|&youtube(){}|, 4:(https://~xxx){123,456}, 5:{123,456}
-  text = text.replace(/(?:(?:https?:\/\/)?(?:(?:www|m)?\.)?youtu[\.]?be(?:\.com)?\/)?(watch\?v=)?([a-zA-Z0-9_\-]{11})(?:\&[a-z]+=[a-zA-Z0-9]+)?|((?:\|)?\&youtube(\(https:\/\/www\.youtube\.com\/watch\?v=[a-zA-Z0-9_\-]{11}(\{[0-9]{2,4}\,[0-9]{2,4}\})?)\)(?:\|)?)/g, 
-    function(){
-      // ようつべにマッチするが、3つ目のカッコである|&youtube|は変換しない
-      // {123,456}があったら
-      if(arguments[0] && !arguments[3] && arguments[4]) {
-        // &youtube形式とアドレスと固有番号をくっつけて出力するよ
-        return "|&youtube(" + "https://www.youtube.com/watch\?v=" + arguments[2] + ")" + arguments[4] + "|";
-      // {123,456}がなかったら
-      } else if(arguments[0] && !arguments[4]) {
-        return "|&youtube(" + "https://www.youtube.com/watch\?v=" + arguments[2] + ")" + "{342,187}" + "|";
-      } else {
-        return arguments[0]; // 繰り返し
+  try{ // try...catch文 : length null(テキストない時)エラー回避
+    for( let i=0; i < match.length; i++){
+      // 個々でIDを取り出す
+      const nicoID = match[i].match(/(?:sm|nm|so)[0-9]+/);
+      const ytID = match[i].match(/[a-zA-Z0-9_\-]{11}/);
+
+      //  記法に整えて配列に格納
+      if( nicoID && !ytID ){
+        let nicoStr = "\&nicovideo\(" + nicoID + "\)";
+        inBoxStr.push(nicoStr);
+          // サムネ
+      }else if( ytID && !nicoID ){
+        let ytStr = "\&youtube\(https:\/\/www\.youtube\.com\/watch\?v=" + ytID + "\)\{342\,187\}";
+        inBoxStr.push(ytStr);
       }
-    });
 
-  // 空白を削除
-  //text = text.replace(/\s|\n/g , "");
-
-  // |&ny()| 1:n/y 2:( sm??? or http~{ ) 3:)or}
-  const nyBox = "\\|\\&(nicovideo|youtube)(\\([a-zA-Z0-9\\_\\:\\/\\?\\,\\.\\=\\)\\{\\-]+)(\\)|\\})" ; 
-  // 改行
-  text = text.replace( new RegExp(nyBox,"g") ,
-    function(){
-      if( arguments[3] === "}" )
-       { return "\|\&" + arguments[1] + arguments[2] + arguments[3] + "\n" ; }
-      else if( arguments[3] === ")" )
-       { return "\|\&" + arguments[1] + arguments[2] + arguments[3] + "\n" ; }
-      else { return arguments[0]; }
+   ///サムネ表示
+     /// ニコニコ
+      if( nicoID && !ytID ){
+      let thumbnail = document.createElement("img");
+      thumbnail.src = "https:\/\/nicovideo\.cdn\.nimg\.jp\/thumbnails\/" + nicoID + "\/" + nicoID + "\.12345678"; //←8ケタのランダム数字が付く
+      // プレビュー欄の子要素として最後に追加していく
+      pre.appendChild(thumbnail);
+    /// ようつべ
+    } else if( ytID  && !nicoID) {
+      let thumbnail = document.createElement("img");
+      thumbnail.src = "https:\/\/img\.youtube\.com\/vi\/" + ytID + "\/default\.jpg";
+      pre.appendChild(thumbnail);
     }
-  );
-  // 先頭の不要な文字列を削除
-  //text = text.replace(/^.*?\|/gm, "\|");
 
-  // 配列に格納
-    inBoxStr = text.match(/\|\&.+(\)|\})/g);
+
+
+    }
+  } catch (err) {return;}
 
   // 2つずつ
-    for( let i=0; i < inBoxStr.length; i++ ){
-      //2の加算を繰り返して偶数位置に|\nを入れる   ※注意※ iにすると無限ループ地獄
-      inBoxStr.splice(i+=2,0,'\|\n');   // ( 位置 , 0:挿入/1:削除 , 挿入する文字)
-      text = inBoxStr.join("");
+  const all = [];
+  for( let i=0; i < inBoxStr.length; i+=2 ){
+    // 1つ目、2つ目
+    const one = inBoxStr[i];
+    const two = inBoxStr[i+1];
+
+    // 2つ目が無い場合
+    if( two === undefined){
+      all.push("\|" + one + "\|\|\n");
+    } else {
+     // 通常の場合
+      all.push("\|" + one + "\|" + two + "\|\n");
     }
-
-
-  // 2列目と3列目の+3していった位置をとりだす
-  for( let i=0; i < inBoxStr.length; i+=3){
-    let Bi = i+1; // 2つ目の列
-    let Ci = i+2; // |\nの列
-    inBoxStr.slice(Bi,Bi+1); // 2つを取り出す(開始位置,終了位置-1)
-   console.log(inBoxStr.slice(Bi,Bi+2)); // ここで確認しつつ調整！！！
+    textarea.value = all.join("");
   }
-  // 連結
 
-
-
-  // 奇数個だったら最後に|を付ける
-  const result  = [];
-    if(inBoxStr.length % 2 == 1){
-      textarea.value = text.replace(/\n$/g, "\|\n");
-      console.log(inBoxStr.length + "個 奇数");
-    }else{
-      textarea.value = text;
-      console.log(inBoxStr.length + "個 偶数");
-    }
-
-
-
- //[番号i][box中身j] boxの中身を二次元配列で格納
- //let boxInfo = [[,],[,]]; 
- // for( let i = 0; 0 < 2/*splitText.length*/; i-- ){
- // 番号を[i]に振っていく
- 
- // 中身を[j]に格納
- // boxInfo[j] = [];
- // boxInfo.push(
- //  text.replace(new RegExp(// , "m") ,
- //  )
- // );
-
-// }
-
-  textarea.value = text; // 変更を加えたテキストをtextareaに反映
+  // 配列を空にする
+  all.length = 0; inBoxStr.length = 0;
   return;
 }
 
@@ -124,7 +107,7 @@ function btnGo() {
 
 ///// テキストエリアでのUndo/Redo
 
- var btnClear = byId('clear');
+ const btnClear = byId('clear');
  var undo = byId('undo');
  var redo = byId('redo');
 
@@ -153,10 +136,29 @@ function btnGo() {
    document.execCommand('redo', false);
 });
 
-
-
 // テキストエリア・ボタン操作を配列に記録
 // push:配列の末尾に追加 pop:末尾を削除 concat()メソッド:配列を結合
+
+
+
+///// コピペ
+ /// コピー
+ function copy(){
+   var text = textarea.value;
+     navigator.clipboard.writeText(text);
+     alert('クリップボードにコピーしました。');
+ }
+
+ /// ペースト
+ function paste(){
+   // クリップボードから読み取り
+   navigator.clipboard.readText()
+     .then((clipText) =>
+       {textarea.innerHTML += "\n" + clipText},
+     () => {alert('貼り付けに失敗しました。\n' + 'クリップボードへのアクセス権限を許可しているか確認してください。')},
+     );
+ }
+
 
 
 ///// 編集方法切り替え
