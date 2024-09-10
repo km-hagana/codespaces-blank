@@ -1,3 +1,3 @@
-ニコニコ動画とYouTubeのURLから固有IDを取り出し、atwikiのプラグイン記法（|&nicovideo()|&youtube()|）に置換するツール。<br>
+ニコニコ動画とYouTubeのURLから固有IDを取り出し、atwikiのプラグイン記法 |&nicovideo()|&youtube()| に置換するツール。<br>
 初音ミクwikiの編集のために作りました。<br>
 無駄なパラメータ等を取り除けるため、動画の番号だけ欲しい時にも使えます。
