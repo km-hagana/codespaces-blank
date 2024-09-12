@@ -50,7 +50,7 @@ function btnGo() {
       const nicoID = match[i].match(/(?:sm|nm|so)[0-9]+/);
       const ytID = match[i].match(/[a-zA-Z0-9_\-]{11}/);
 
-      //  記法に整えて配列に格納
+      // 記法に整えて配列に格納
       if( nicoID && !ytID ){
         let nicoStr = "\&nicovideo\(" + nicoID + "\)";
         inBoxStr.push(nicoStr);
@@ -178,100 +178,6 @@ function radio() {
  }
 }
 
-
-
-///// 個別
-// template取得
-const template = byId('template');
-// アイコンを取得（配列風メソッド）
-const dragIcon = template.getElementsByClassName('drag');
-const deleteIcon = template.getElementsByClassName('delete');
-// inputとdivを取得
-const input = template.getElementsByTagName('input');
-const div = template.getElementsByTagName('div');
-//  const inputArray = Array.from(input);
-//  const divArray = Array.from(div);
-
-/// 配列
-const inputAndDiv = [];
- // inputとdivをセットで格納
- (function(){
-  for (let i=0; i<input.length; i++){
-    inputAndDiv[i] = [[i],[input[i]+div[i]]];
-  }
-  return inputAndDiv;
- }())
-//D&D時spliceで挿入　配列取得いつ？即時関数？
-
- /// 削除アイコンを押したら削除
- for (let i=0; i < div.length; i++){
-   div[i].addEventListener("click", function(){
-     if(this.className === "delete"){
-       // HTMLから削除
-       this.previousElementSibling.remove(); //前にあるinput
-       this.remove(); //押したdiv
-       // 配列から削除
-       const aaa = inputAndDiv.splice(inputAndDiv[i],1);
-       console.log(inputAndDiv);
-     }
-    return inputAndDiv;
-   });
- }
-
- // 消したデータ格納
- const deleteData = [];
-
-
-
- /// 削除メニュー
- // 削除メニュー取得
- const deleteMenu = byId('deleteMenu');
- function deleteShow(){
-  // getElementsByClassName は HTMLCollection という配列風オブジェクトのため配列ではない。配列に変換
-  const dragIconArray = Array.from(dragIcon);
-  const deleteIconArray = Array.from(deleteIcon);
-
-  if(dragIcon[0]){
-    // drag -> delete
-    dragIconArray.forEach((i) => {i.setAttribute("class","delete")});
-    // 削除メニューを押した状態にする
-    deleteMenu.classList.toggle("pushBtn");
-  }else if(deleteIcon[0]){
-    // delete -> drag
-    deleteIconArray.forEach((i) => {i.setAttribute("class","drag")});
-    deleteMenu.classList.toggle("pushBtn");
-  }else{
-    // 何も存在しなければ切り替え可能にする
-    deleteMenu.classList.toggle("pushBtn");
-  }
- }
-
- /// 追加ボタン押したら追加
- function addForm(){
-  // inputとdivを作る
-  const newinput = document.createElement("input");
-  const newdiv = document.createElement("div");
-
-  /// divにアイコン設定
-  // 削除メニュー押してたらdelete
-  if(deleteMenu.className == "defaultBtn pushBtn"){
-    newdiv.setAttribute("class","delete");
-  }else if(deleteMenu.className == "defaultBtn"){
-   newdiv.setAttribute("class","drag");
-  }
-  
-  // 作ったアイテムを挿入
-  const set1 = template.appendChild(newinput)+template.appendChild(newdiv);
-  // 配列に反映
-  inputAndDiv.push(inputAndDiv.slice(-1),[set1]); //最後の数字を+1したい
-    console.log(inputAndDiv);
-    return inputAndDiv;
- }
-
-
-
-
-
 ///// プレビュー表示
 function check() {
  // チェックボックス取得
@@ -292,5 +198,5 @@ function check() {
   previewStyle.style.display = "none";
   // 編集枠の幅100%
   type.style.width = "100%";
- };
+ }
 };
