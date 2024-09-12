@@ -117,21 +117,7 @@ function btnGo() {
    document.execCommand('delete');
 });
 
-///// 参考にもある通り、execCommandは廃止の一途を辿るのみ
-///// chromeではギリ使用可能、いずれ代替のものを使う
 
-// 戻す
- undo.addEventListener('click', function() {
-   //execCommand('insertText')
-   textarea.focus();
-   document.execCommand('undo', false);
-});
-// やり直す
- redo.addEventListener('click', function() {
-   //execCommand('insertText')
-   textarea.focus();
-   document.execCommand('redo', false);
-});
 
 // テキストエリア・ボタン操作を配列に記録
 // push:配列の末尾に追加 pop:末尾を削除 concat()メソッド:配列を結合
@@ -157,26 +143,6 @@ function btnGo() {
  }
 
 
-
-///// 編集方法切り替え
-function radio() {
- // ラジオボタン取得
- const mButton = byId('sm');
- const sButton = byId('ss');
- // クラスmany・singleを取得
- const many = byId("many");
- const single = byId("single");
-
- if (mButton.checked === true) {
-  // 一括変換なら個別を非表示
-  single.style.display = "none";
-  many.style.display = "";
- } else if(sButton.checked === true) {
-  // 個別なら一括変換を非表示・個別を表示
-  many.style.display = "none";
-  single.style.display = "inline-block";
- }
-}
 
 ///// プレビュー表示
 function check() {
